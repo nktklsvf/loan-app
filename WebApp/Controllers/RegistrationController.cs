@@ -34,7 +34,6 @@ namespace WebApp.Controllers
                 _db.SaveChanges();
                 return RedirectToAction("Index", "Home");
             }
-            var errors = ModelState.Values.SelectMany(v => v.Errors);
             return View();
         }
 
