@@ -1,0 +1,40 @@
+﻿@{
+    ViewData["Title"] = "Add Loan Page";
+}
+
+@model LoanView
+
+<h3 class="card-title">@Model.Loan.Name</h3>
+<p class="card-text">@Model.Loan.Description</p>
+<h5 class="card-title">List of Loan actions:</h5>
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Giver</th>
+                <th scope="col">Taker</th>
+                <th scope="col">Amount</th>
+                <th scope="col">Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Actions)
+            {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.Id)</td>
+                <td>@Html.DisplayFor(modelItem => item.GiverUser.Name)</td>
+                <td>@Html.DisplayFor(modelItem => item.TakerUser.Name)</td>
+                @if (item.Amount >= 0)
+                {
+                    <td class="text-danger">@Html.DisplayFor(modelItem => item.Amount)</td>
+                }
+                else
+                {
+                    <td class="text-success">@Html.DisplayFor(modelItem => item.Amount)</td>
+                }
+                <td>@Html.DisplayFor(modelItem => item.Purpose)</td>
+            </tr>
+            }
+
+        </tbody>
+    </table>

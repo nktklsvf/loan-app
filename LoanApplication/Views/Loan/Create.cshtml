@@ -1,0 +1,21 @@
+﻿@{
+    ViewData["Title"] = "Add Loan Page";
+}
+
+@model Loan
+
+<form method="post">
+    <div class="form-row">
+        <div class="form-group col-md-8">
+            <label for="inputEmail4">Loan name</label>
+            <input type="text" class="form-control" id="inputEmail4" asp-for="Name">
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="form-group col-md-8">
+            <label for="inputPassword4">Loan Description</label>
+            <input type="text" class="form-control" id="inputPassword4" asp-for="Description">
+        </div>
+    </div>
+    <button type="submit" class="btn btn-primary">Add loan</button>
+</form>
