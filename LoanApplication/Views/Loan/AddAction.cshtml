@@ -1,0 +1,33 @@
+﻿@{
+    ViewData["Title"] = "Add Loan Action Page";
+}
+
+@model AddLoanAction
+<form method="post">
+    <div class="form-row">
+        <div class="form-group col-md-8">
+            <label>Giver username</label>
+            <input type="text" class="form-control" asp-for="GiverUserName">
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="form-group col-md-8">
+            <label>Taker username</label>
+            <input type="text" class="form-control" asp-for="TakerUserName">
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="form-group col-md-8">
+            <label>Amount</label>
+            <input type="text" class="form-control" asp-for="Amount">
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="form-group col-md-8">
+            <label>Purpose</label>
+            <input type="text" class="form-control" asp-for="Purpose">
+        </div>
+    </div>
+    <input type="hidden" class="form-control" value=@Model.LoanId asp-for="LoanId">
+    <button type="submit" class="btn btn-primary">Add Loan Action</button>
+</form>

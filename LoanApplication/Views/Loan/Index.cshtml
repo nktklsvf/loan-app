@@ -14,6 +14,7 @@
             <th scope="col">Name</th>
             <th scope="col">Description</th>
             <th scope="col"></th>
+            <th scope="col"></th>
         </tr>
     </thead>
     <tbody>
@@ -24,8 +25,10 @@
                 <td>@Html.DisplayFor(modelItem => item.Name)</td>
                 <td>@Html.DisplayFor(modelItem => item.Description)</td>
                 <td>@Html.ActionLink("Edit", "Show", "Loan", new { item.Id }, null)</td>
+                <td>@Html.ActionLink("Remove", "Remove", "Loan", new { item.Id }, null)</td>
             </tr>
         }
 
     </tbody>
 </table>
+<input type="button" class="btn btn-primary" value="Add Loan" onclick="location.href='@Url.Action("Create", "Loan")'" />

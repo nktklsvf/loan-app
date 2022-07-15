@@ -10,7 +10,6 @@
     <table class="table">
         <thead>
             <tr>
-                <th scope="col">#</th>
                 <th scope="col">Giver</th>
                 <th scope="col">Taker</th>
                 <th scope="col">Amount</th>
@@ -21,7 +20,6 @@
             @foreach (var item in Model.Actions)
             {
             <tr>
-                <td>@Html.DisplayFor(modelItem => item.Id)</td>
                 <td>@Html.DisplayFor(modelItem => item.GiverUser.Name)</td>
                 <td>@Html.DisplayFor(modelItem => item.TakerUser.Name)</td>
                 @if (item.Amount >= 0)
@@ -38,3 +36,4 @@
 
         </tbody>
     </table>
+<input type="button" class="btn btn-primary" value="Add Action" onclick="location.href='@Url.Action("AddAction", "Loan",  new { Model.Loan.Id })'" />
