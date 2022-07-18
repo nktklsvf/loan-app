@@ -10,7 +10,7 @@ namespace LoanApplication.Validations
             if (value != null)
             {
                 ApplicationDbContext context = validationContext.GetService<ApplicationDbContext>();// (typeof(ApplicationDbContext));
-                if (!context.Users.Any(user => user.Name == value.ToString()))
+                if (!context.Users.Any(user => user.UserName == value.ToString()))
                 {
                     return ValidationResult.Success;
                 }

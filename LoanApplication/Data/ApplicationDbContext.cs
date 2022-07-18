@@ -1,17 +1,19 @@
 ﻿using LoanApplication.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace LoanApplication.Data
 {
-    public class ApplicationDbContext: DbContext
+    public class ApplicationDbContext : IdentityDbContext<User>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
-
+            Database.EnsureCreated();
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<LoanAction>()
                         .HasOne(m => m.GiverUser)
                         .WithMany(t => t.LoanActionAsGiver)
@@ -25,7 +27,6 @@ namespace LoanApplication.Data
                         .OnDelete(DeleteBehavior.ClientSetNull);
         }
 
-        public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<Loan> Loans { get; set; }
         public virtual DbSet<LoanAction> LoanActions { get; set; }
     }

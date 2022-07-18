@@ -1,5 +1,8 @@
 ﻿using LoanApplication.Data;
 using LoanApplication.Models;
+using LoanApplication.ViewModels;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,12 +11,14 @@ namespace LoanApplication.Controllers
     public class LoanController : Controller
     {
         private readonly ApplicationDbContext _db;
+        private readonly UserManager<User> _userManager;
 
-        public LoanController(ApplicationDbContext db)
+        public LoanController(UserManager<User> userManager, ApplicationDbContext db)
         {
             _db = db;
+            _userManager = userManager;
         }
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
             return View(_db.Set<Loan>().ToList());
         }
@@ -38,21 +43,23 @@ namespace LoanApplication.Controllers
             }
             return Redirect("/Loan");
         }
+        [Authorize]
         public ActionResult AddAction(int id)
         {
-            AddLoanAction addLoanAction = new AddLoanAction();
+            AddLoanActionModel addLoanAction = new AddLoanActionModel();
             addLoanAction.LoanId = id;
             return View(addLoanAction);
         }
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult AddAction(AddLoanAction obj)
+        public IActionResult AddAction(AddLoanActionModel obj)
         {
             if (ModelState.IsValid)
             {
                 LoanAction loanAction = new LoanAction();
-                User giverUser = _db.Users.Single(user => user.Name == obj.GiverUserName);
-                User takerUser = _db.Users.Single(user => user.Name == obj.TakerUserName);
+                User giverUser = _db.Users.Single(user => user.UserName == obj.GiverUserName);
+                User takerUser = _db.Users.Single(user => user.UserName == obj.TakerUserName);
                 Console.WriteLine(obj.LoanId);
                 Loan loan = _db.Loans.Single(l => l.Id == obj.LoanId);
                 if (giverUser != null && takerUser != null && loan != null)
@@ -69,7 +76,7 @@ namespace LoanApplication.Controllers
             }
             return View(obj);
         }
-
+        [Authorize]
         public IActionResult Create()
         {
             return View();

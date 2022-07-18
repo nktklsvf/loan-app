@@ -1,4 +1,4 @@
-﻿using LoanApplication.Models;
+﻿using LoanApplication.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
