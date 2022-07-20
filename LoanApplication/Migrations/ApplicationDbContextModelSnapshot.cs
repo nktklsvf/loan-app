@@ -146,6 +146,31 @@ namespace LoanApplication.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("LoanApplication.Models.UserContact", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("ContactUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ContactUserId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserContact");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
@@ -304,6 +329,23 @@ namespace LoanApplication.Migrations
                     b.Navigation("TakerUser");
                 });
 
+            modelBuilder.Entity("LoanApplication.Models.UserContact", b =>
+                {
+                    b.HasOne("LoanApplication.Models.User", "ContactUser")
+                        .WithMany("UserAsContact")
+                        .HasForeignKey("ContactUserId")
+                        .IsRequired();
+
+                    b.HasOne("LoanApplication.Models.User", "User")
+                        .WithMany("UserContacts")
+                        .HasForeignKey("UserId")
+                        .IsRequired();
+
+                    b.Navigation("ContactUser");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -360,6 +402,10 @@ namespace LoanApplication.Migrations
                     b.Navigation("LoanActionAsGiver");
 
                     b.Navigation("LoanActionAsTaker");
+
+                    b.Navigation("UserAsContact");
+
+                    b.Navigation("UserContacts");
                 });
 #pragma warning restore 612, 618
         }

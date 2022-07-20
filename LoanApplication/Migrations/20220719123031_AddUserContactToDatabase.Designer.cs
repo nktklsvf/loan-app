@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LoanApplication.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220718084711_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20220719123031_AddUserContactToDatabase")]
+    partial class AddUserContactToDatabase
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -146,6 +146,31 @@ namespace LoanApplication.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
+                });
+
+            modelBuilder.Entity("LoanApplication.Models.UserContact", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("ContactUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ContactUserId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserContact");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -306,6 +331,23 @@ namespace LoanApplication.Migrations
                     b.Navigation("TakerUser");
                 });
 
+            modelBuilder.Entity("LoanApplication.Models.UserContact", b =>
+                {
+                    b.HasOne("LoanApplication.Models.User", "ContactUser")
+                        .WithMany("UserAsContact")
+                        .HasForeignKey("ContactUserId")
+                        .IsRequired();
+
+                    b.HasOne("LoanApplication.Models.User", "User")
+                        .WithMany("UserContacts")
+                        .HasForeignKey("UserId")
+                        .IsRequired();
+
+                    b.Navigation("ContactUser");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -362,6 +404,10 @@ namespace LoanApplication.Migrations
                     b.Navigation("LoanActionAsGiver");
 
                     b.Navigation("LoanActionAsTaker");
+
+                    b.Navigation("UserAsContact");
+
+                    b.Navigation("UserContacts");
                 });
 #pragma warning restore 612, 618
         }

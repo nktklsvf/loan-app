@@ -25,6 +25,12 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Loan" asp-action="Index">Loans</a>
                         </li>
+                        @if(User.Identity.IsAuthenticated)
+                        {
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Contacts">My Contacts</a>
+                        </li>
+                        }
                     </ul>
                 </div>
                 @if(User.Identity.IsAuthenticated)

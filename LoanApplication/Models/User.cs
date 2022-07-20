@@ -12,6 +12,7 @@ namespace LoanApplication.Models
         public string? PhoneNumber { get; set; }
         public virtual ICollection<LoanAction>? LoanActionAsGiver { get; set; }
         public virtual ICollection<LoanAction>? LoanActionAsTaker { get; set; }
-
+        public virtual ICollection<UserContact>? UserContacts { get; set; }
+        public virtual ICollection<UserContact>? UserAsContact { get; set; }
     }
 }

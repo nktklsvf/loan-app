@@ -1,0 +1,116 @@
+﻿@model AccountModel
+<p class="h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">@Model.UserName's profile</p>
+<div class="col-lg-8">
+          <div class="card-body">
+            <div class="row">
+              <div class="col-sm-3">
+                <p class="mb-0">Username</p>
+              </div>
+              <div class="col-sm-9">
+                <p class="text-muted mb-0">@Model.UserName</p>
+              </div>
+            </div>
+            <hr>
+            <div class="row">
+              <div class="col-sm-3">
+                <p class="mb-0">Phone</p>
+              </div>
+              <div class="col-sm-9">
+                <p class="text-muted mb-0">@Model.PhoneNumber</p>
+              </div>
+            </div>
+            <hr>
+            <div class="row">
+              <div class="col-sm-3">
+                <p class="mb-0">Currently loaned</p>
+              </div>
+              <div class="col-sm-9">
+                <p class="text-muted mb-0">@Model.TotalGiver</p>
+              </div>
+            </div>
+            <hr>
+            <div class="row">
+              <div class="col-sm-3">
+                <p class="mb-0">Currently took</p>
+              </div>
+              <div class="col-sm-9">
+                <p class="text-muted mb-0">@Model.TotalTaker</p>
+              </div>
+            </div>
+        </div>
+
+        @if (User.Identity.IsAuthenticated && User.Identity.Name != Model.UserName)
+        {
+            @if (Model.HasAddContactButton)
+            {
+                <form method="post" asp-controller="Account" asp-action="AddContact">
+                    <input type="hidden" name="username" value="@Model.Id" />
+                    <input type="submit" class="btn btn-primary" value="Add to contacts" />
+                </form>
+            }
+            else
+            {
+                 <form method="post" asp-controller="Account" asp-action="RemoveContact">
+                    <input type="hidden" name="username" value="@Model.Id" />
+                    <input type="submit" class="btn btn-danger" value="Remove from contacts" />
+                </form>
+            }
+        }
+
+<h5 class="card-title">List of Loan actions as Giver:</h5>
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">Taker</th>
+                <th scope="col">Amount</th>
+                <th scope="col">Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.LoanActionAsGiver)
+            {
+            <tr>
+                <td><a href="@Url.Action("Index", "Account",  new { item.TakerUser.UserName })">@item.TakerUser.UserName</a></td>
+                @if (item.Amount >= 0)
+                {
+                    <td class="text-danger">@Html.DisplayFor(modelItem => item.Amount)</td>
+                }
+                else
+                {
+                    <td class="text-success">@Html.DisplayFor(modelItem => item.Amount)</td>
+                }
+                <td>@Html.DisplayFor(modelItem => item.Purpose)</td>
+            </tr>
+            }
+
+        </tbody>
+    </table>
+
+<h5 class="card-title">List of Loan actions as Taker:</h5>
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">Giver</th>
+                <th scope="col">Amount</th>
+                <th scope="col">Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.LoanActionAsTaker)
+            {
+            <tr>
+                <td><a href="@Url.Action("Index", "Account",  new { item.GiverUser.UserName })">@item.GiverUser.UserName</a></td>
+                @if (item.Amount >= 0)
+                {
+                    <td class="text-danger">@Html.DisplayFor(modelItem => item.Amount)</td>
+                }
+                else
+                {
+                    <td class="text-success">@Html.DisplayFor(modelItem => item.Amount)</td>
+                }
+                <td>@Html.DisplayFor(modelItem => item.Purpose)</td>
+            </tr>
+            }
+
+        </tbody>
+    </table>

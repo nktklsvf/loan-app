@@ -20,8 +20,8 @@
             @foreach (var item in Model.Actions)
             {
             <tr>
-                <td>@Html.DisplayFor(modelItem => item.GiverUser.UserName)</td>
-                <td>@Html.DisplayFor(modelItem => item.TakerUser.UserName)</td>
+                <td><a href="@Url.Action("Index", "Account",  new { item.GiverUser.UserName })">@item.GiverUser.UserName</a></td>
+                <td><a href="@Url.Action("Index", "Account",  new { item.TakerUser.UserName })">@item.TakerUser.UserName</a></td>
                 @if (item.Amount >= 0)
                 {
                     <td class="text-danger">@Html.DisplayFor(modelItem => item.Amount)</td>
