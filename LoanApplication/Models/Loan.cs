@@ -10,5 +10,7 @@ namespace LoanApplication.Models
         public string Name { get; set; }
         [Required]
         public string Description { get; set; }
+        [Required]
+        public DateTime CreatingTime { get; set; }
     }
 }

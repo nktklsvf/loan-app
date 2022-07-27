@@ -53,25 +53,53 @@ namespace LoanApplication.Controllers
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult AddAction(AddLoanActionModel obj)
+        public async Task<IActionResult> AddAction(AddLoanActionModel obj)
         {
             if (ModelState.IsValid)
             {
                 LoanAction loanAction = new LoanAction();
-                User giverUser = _db.Users.Single(user => user.UserName == obj.GiverUserName);
-                User takerUser = _db.Users.Single(user => user.UserName == obj.TakerUserName);
+                User giverUser = _db.Users.FirstOrDefault(user => user.UserName == obj.GiverUserName);
+                User takerUser = _db.Users.FirstOrDefault(user => user.UserName == obj.TakerUserName);
                 Console.WriteLine(obj.LoanId);
                 Loan loan = _db.Loans.Single(l => l.Id == obj.LoanId);
-                if (giverUser != null && takerUser != null && loan != null)
+                if (loan != null)
                 {
-                    loanAction.GiverUser = giverUser;
-                    loanAction.TakerUser = takerUser;
-                    loanAction.Purpose = obj.Purpose;
-                    loanAction.Amount = obj.Amount;
-                    loanAction.Loan = loan;
-                    _db.LoanActions.Add(loanAction);
-                    _db.SaveChanges();
-                    return Redirect("/Loan/Show/" + obj.LoanId);
+                    if (giverUser == null)
+                    {
+                        User user = new User();
+                        user.UserName = obj.GiverUserName;
+                        user.IsGhost = true;
+                        user.PhoneNumber = "-";
+                        var result = await _userManager.CreateAsync(user);
+                        if (result.Succeeded)
+                        {
+                            giverUser = user;
+                        }
+                    }
+                    if (takerUser == null)
+                    {
+                        User user = new User();
+                        user.UserName = obj.TakerUserName;
+                        user.IsGhost = true;
+                        user.PhoneNumber = "-";
+                        var result = await _userManager.CreateAsync(user);
+                        if (result.Succeeded)
+                        {
+                            takerUser = user;
+                        }
+                    }
+                    if (giverUser != null && takerUser != null)
+                    {
+                        loanAction.GiverUser = giverUser;
+                        loanAction.TakerUser = takerUser;
+                        loanAction.Purpose = obj.Purpose;
+                        loanAction.Amount = obj.Amount;
+                        loanAction.Loan = loan;
+                        loanAction.CreatingTime = DateTime.Now;
+                        _db.LoanActions.Add(loanAction);
+                        _db.SaveChanges();
+                        return Redirect("/Loan/Show/" + obj.LoanId);
+                    }
                 }
             }
             return View(obj);
@@ -83,11 +111,15 @@ namespace LoanApplication.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(Loan obj)
+        public IActionResult Create(AddLoanModel obj)
         {
             if (ModelState.IsValid)
             {
-                _db.Loans.Add(obj);
+                Loan loan = new Loan();
+                loan.Name = obj.Name;
+                loan.Description = obj.Description;
+                loan.CreatingTime = DateTime.Now;
+                _db.Loans.Add(loan);
                 _db.SaveChanges();
                 return RedirectToAction("Index", "Loan");
             }

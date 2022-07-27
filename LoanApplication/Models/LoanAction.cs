@@ -14,5 +14,6 @@ namespace LoanApplication.Models
         public int Amount { get; set; }
         public User GiverUser { get; set; }
         public User TakerUser { get; set; }
+        public DateTime CreatingTime { get; set; }
     }
 }

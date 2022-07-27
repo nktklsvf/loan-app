@@ -14,6 +14,7 @@
                 <th scope="col">Taker</th>
                 <th scope="col">Amount</th>
                 <th scope="col">Description</th>
+                <th scope="col">Creating Date</th>
             </tr>
         </thead>
         <tbody>
@@ -31,6 +32,8 @@
                     <td class="text-success">@Html.DisplayFor(modelItem => item.Amount)</td>
                 }
                 <td>@Html.DisplayFor(modelItem => item.Purpose)</td>
+                <td>@item.CreatingTime
+                    (@Math.Floor((DateTime.Now - item.CreatingTime).TotalDays) days ago)
             </tr>
             }
 

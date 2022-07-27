@@ -4,6 +4,7 @@ using LoanApplication.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LoanApplication.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220727120137_LoanCreatingTime")]
+    partial class LoanCreatingTime
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -56,9 +58,6 @@ namespace LoanApplication.Migrations
 
                     b.Property<int>("Amount")
                         .HasColumnType("int");
-
-                    b.Property<DateTime>("CreatingTime")
-                        .HasColumnType("datetime2");
 
                     b.Property<string>("GiverUserId")
                         .IsRequired()
@@ -103,10 +102,6 @@ namespace LoanApplication.Migrations
                         .HasColumnType("nvarchar(256)");
 
                     b.Property<bool>("EmailConfirmed")
-                        .HasColumnType("bit");
-
-                    b.Property<bool?>("IsGhost")
-                        .IsRequired()
                         .HasColumnType("bit");
 
                     b.Property<bool>("LockoutEnabled")

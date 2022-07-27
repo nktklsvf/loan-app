@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace LoanApplication.Controllers
 {
@@ -20,22 +21,13 @@ namespace LoanApplication.Controllers
             _signInManager = signInManager;
             _applicationDbContext = applicationDbContext;
         }
-        [HttpGet("/Account/Index/{username}")]
-        public async Task<IActionResult> Index(string username)
-        {
-            User user = _applicationDbContext
-                .Users
-                .Include(x => x.LoanActionAsGiver)
-                .ThenInclude(x => x.TakerUser)
-                .Include(x => x.LoanActionAsTaker)
-                .ThenInclude(x => x.GiverUser)
-                .Where(x => x.UserName == username)
-                .FirstOrDefault();
 
+        public static AccountModel CreateAccountModelForUser(ClaimsPrincipal currentUser, bool isInContacts, User user)
+        {
             AccountModel accountModel = new AccountModel();
             accountModel.Id = user.Id;
             accountModel.PhoneNumber = user.PhoneNumber;
-            accountModel.UserName = username;
+            accountModel.UserName = user.UserName;
 
             int totalGave = 0;
             int totalTook = 0;
@@ -53,9 +45,9 @@ namespace LoanApplication.Controllers
             accountModel.TotalGiver = totalGave;
             accountModel.TotalTaker = totalTook;
 
-            if (User.Identity.IsAuthenticated)
+            if (currentUser.Identity.IsAuthenticated)
             {
-                if (_applicationDbContext.UserContacts.Include(m => m.ContactUser).Any(m => m.ContactUser.UserName == username))
+                if (isInContacts)
                 {
                     accountModel.HasAddContactButton = false;
                 }
@@ -63,7 +55,7 @@ namespace LoanApplication.Controllers
                 {
                     accountModel.HasAddContactButton = true;
                 }
-            } 
+            }
             else
             {
                 accountModel.HasAddContactButton = false;
@@ -72,12 +64,32 @@ namespace LoanApplication.Controllers
             accountModel.LoanActionAsGiver = user.LoanActionAsGiver;
             accountModel.LoanActionAsTaker = user.LoanActionAsTaker;
 
+            return accountModel;
+        }
+
+        [HttpGet("/Account/Index/{username}")]
+        public async Task<IActionResult> Index(string username)
+        {
+            User user = _applicationDbContext
+                .Users
+                .Include(x => x.LoanActionAsGiver)
+                .ThenInclude(x => x.TakerUser)
+                .Include(x => x.LoanActionAsTaker)
+                .ThenInclude(x => x.GiverUser)
+                .Where(x => x.UserName == username)
+                .FirstOrDefault();
+
+            bool isInContact = _applicationDbContext.UserContacts.Include(m => m.ContactUser).Any(m => m.ContactUser.UserName == user.UserName);
+            AccountModel accountModel = CreateAccountModelForUser(User, isInContact, user);
             return View(accountModel);
         }
         [HttpGet]
         public IActionResult Register()
         {
-            return View();
+            RegisterViewModel registerViewModel = new RegisterViewModel();
+            registerViewModel.DisplayGhostQuestion = false;
+            registerViewModel.ConfirmGhost = false;
+            return View(registerViewModel);
         }
         [HttpPost]
         public async Task<IActionResult> Register(RegisterViewModel model)
@@ -95,6 +107,31 @@ namespace LoanApplication.Controllers
                 {
                     foreach (var error in result.Errors)
                     {
+                        if (error.Code == "DuplicateUserName")
+                        {
+                            User ghostUser = _applicationDbContext.Users.Where(m => m.UserName == user.UserName && m.IsGhost == true).FirstOrDefault();
+                            if (ghostUser != null)
+                            {
+                                if (model.DisplayGhostQuestion == false)
+                                {
+                                    model.DisplayGhostQuestion = true;
+                                    return View(model);
+                                }
+                                else
+                                {
+                                    if (model.ConfirmGhost)
+                                    {
+                                        ghostUser.PhoneNumber = model.PhoneNumber;
+                                        ghostUser.IsGhost = false;
+                                        _applicationDbContext.Update(ghostUser);
+                                        await _userManager.AddPasswordAsync(ghostUser, model.Password);
+                                        await _userManager.SetEmailAsync(ghostUser, model.Email);
+                                        await _signInManager.SignInAsync(ghostUser, false);
+                                        return RedirectToAction("Index", "Home");
+                                    }
+                                }
+                            }
+                        }
                         ModelState.AddModelError(string.Empty, error.Description);
                     }
                 }
@@ -113,13 +150,16 @@ namespace LoanApplication.Controllers
         public IActionResult Contacts()
         {
             ContactListModel contactListModel = new ContactListModel();
-            string[] contacts = _applicationDbContext.UserContacts
+            List<User> users = _applicationDbContext.UserContacts
                             .Include(m => m.ContactUser)
+                            .Include(m => m.ContactUser.LoanActionAsGiver)
+                            .Include(m => m.ContactUser.LoanActionAsTaker)
                             .Include(m => m.User)
                             .Where(m => m.User.UserName == User.Identity.Name)
-                            .Select(m => m.ContactUser.UserName)
-                            .ToArray();
-            contactListModel.contacts = contacts;
+                            .Select(m => m.ContactUser)
+                            .ToList();
+
+            contactListModel.contacts = users.Select(m => CreateAccountModelForUser(User, false, m)).ToList();
             return View(contactListModel);
         }
 

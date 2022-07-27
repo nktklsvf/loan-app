@@ -5,7 +5,7 @@
 @model List<Loan>
 
 
-
+<p class="h1 fw-bold mb-5 mx-1 md-4 mt-4">Loans list</p>
 
 <table class="table">
     <thead>
@@ -13,6 +13,7 @@
             <th scope="col">#</th>
             <th scope="col">Name</th>
             <th scope="col">Description</th>
+            <th scope="col">Creating Date</th>
             <th scope="col"></th>
             <th scope="col"></th>
         </tr>
@@ -24,6 +25,8 @@
                 <td>@Html.DisplayFor(modelItem => item.Id)</td>
                 <td>@Html.DisplayFor(modelItem => item.Name)</td>
                 <td>@Html.DisplayFor(modelItem => item.Description)</td>
+                <td>@item.CreatingTime
+                    (@Math.Floor((DateTime.Now - item.CreatingTime).TotalDays) days ago)
                 <td>@Html.ActionLink("Edit", "Show", "Loan", new { item.Id }, null)</td>
                 <td>@Html.ActionLink("Remove", "Remove", "Loan", new { item.Id }, null)</td>
             </tr>

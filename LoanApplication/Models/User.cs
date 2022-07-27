@@ -10,6 +10,8 @@ namespace LoanApplication.Models
     {
         [Required]
         public string? PhoneNumber { get; set; }
+        [Required]
+        public bool? IsGhost { get; set; }
         public virtual ICollection<LoanAction>? LoanActionAsGiver { get; set; }
         public virtual ICollection<LoanAction>? LoanActionAsTaker { get; set; }
         public virtual ICollection<UserContact>? UserContacts { get; set; }

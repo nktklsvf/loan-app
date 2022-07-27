@@ -1,0 +1,24 @@
+﻿<p class="h1 fw-bold mb-5 mx-1 md-4 mt-4">Search</p>
+<p>Search by phone number</p>
+<form method="get" asp-controller="Search" asp-action="ByPhone">
+    <div class="input-group">
+      <div class="form-outline">
+        <input type="search" id="number" name="number" class="form-control" />
+      </div>
+      <button type="submit" class="btn btn-primary">
+        <i class="bi-search"></i>
+      </button>
+    </div>
+</form>
+
+<p>Search by username</p>
+<form method="get" asp-controller="Search" asp-action="ByUsername">
+    <div class="input-group">
+      <div class="form-outline">
+        <input type="search" id="username" name="username" class="form-control" />
+      </div>
+      <button type="submit" class="btn btn-primary">
+        <i class="bi-search"></i>
+      </button>
+    </div>
+</form>

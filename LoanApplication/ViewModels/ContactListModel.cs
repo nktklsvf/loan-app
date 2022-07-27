@@ -1,7 +1,9 @@
-﻿namespace LoanApplication.ViewModels
+﻿using LoanApplication.Models;
+
+namespace LoanApplication.ViewModels
 {
     public class ContactListModel
     {
-        public string[] contacts { get; set; }
+        public List<AccountModel> contacts { get; set; }
     }
 }

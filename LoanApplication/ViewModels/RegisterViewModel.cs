@@ -26,5 +26,7 @@ namespace LoanApplication.ViewModels
         [Required]
         [Display(Name = "Phone number")]
         public string PhoneNumber { get; set; }
+        public bool DisplayGhostQuestion { get; set; }
+        public bool ConfirmGhost { get; set; }
     }
 }

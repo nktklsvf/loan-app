@@ -1,8 +1,9 @@
-﻿@model ContactListModel
-<p class="h1 fw-bold mb-5 mx-1 md-4 mt-4">Your contacts list</p>
+﻿@model SearchResultViewModel
+
+<p class="h1 fw-bold mb-5 mx-1 md-4 mt-4">Search result for @Model.SearchingFor: @Model.SearchInput</p>
 
 
-        @if (Model.contacts.Count > 0)
+        @if (Model.Found.Count > 0)
         {
             <table class="table">
                 <thead>
@@ -14,7 +15,7 @@
                     </tr>
                 </thead>
             <tbody>
-            @foreach (var contact in Model.contacts)
+            @foreach (var contact in Model.Found)
             {
                 <tr>
                     <td><a href="@Url.Action("Index", "Account",  new { contact.UserName })">@contact.UserName</a></td>
@@ -28,5 +29,5 @@
         }
         else
         {
-            <p>You don't have any contacts yet</p>
+            <p>Nothing has been found</p>
         }
