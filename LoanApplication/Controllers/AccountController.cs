@@ -101,7 +101,7 @@ namespace LoanApplication.Controllers
                 if (result.Succeeded)
                 {
                     await _signInManager.SignInAsync(user, false);
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("Index", "Loan");
                 }
                 else
                 {
@@ -127,7 +127,7 @@ namespace LoanApplication.Controllers
                                         await _userManager.AddPasswordAsync(ghostUser, model.Password);
                                         await _userManager.SetEmailAsync(ghostUser, model.Email);
                                         await _signInManager.SignInAsync(ghostUser, false);
-                                        return RedirectToAction("Index", "Home");
+                                        return RedirectToAction("Index", "Loan");
                                     }
                                 }
                             }
@@ -198,7 +198,7 @@ namespace LoanApplication.Controllers
                     await _signInManager.PasswordSignInAsync(model.UserName, model.Password, model.RememberMe, false);
                 if (result.Succeeded)
                 {
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("Index", "Loan");
                 }
                 else
                 {
@@ -213,7 +213,7 @@ namespace LoanApplication.Controllers
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Loan");
         }
     }
 }
