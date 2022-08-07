@@ -1,5 +1,6 @@
 ﻿using LoanApplication.Data;
 using LoanApplication.Models;
+using LoanApplication.Repositories;
 using LoanApplication.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -12,14 +13,14 @@ namespace LoanApplication.Controllers
     public class AccountController : Controller
     {
         private readonly UserManager<User> _userManager;
+        private readonly IUserRepository _userRepository;
         private readonly SignInManager<User> _signInManager;
-        private readonly ApplicationDbContext _applicationDbContext;
 
-        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager, ApplicationDbContext applicationDbContext)
+        public AccountController(SignInManager<User> signInManager, UserManager<User> userManager, IUserRepository userRepository)
         {
             _userManager = userManager;
             _signInManager = signInManager;
-            _applicationDbContext = applicationDbContext;
+            _userRepository = userRepository;
         }
 
         public static AccountModel CreateAccountModelForUser(ClaimsPrincipal currentUser, bool isInContacts, User user)
@@ -70,16 +71,9 @@ namespace LoanApplication.Controllers
         [HttpGet("/Account/Index/{username}")]
         public async Task<IActionResult> Index(string username)
         {
-            User user = _applicationDbContext
-                .Users
-                .Include(x => x.LoanActionAsGiver)
-                .ThenInclude(x => x.TakerUser)
-                .Include(x => x.LoanActionAsTaker)
-                .ThenInclude(x => x.GiverUser)
-                .Where(x => x.UserName == username)
-                .FirstOrDefault();
+            User user = _userRepository.GetByUsername(username);
 
-            bool isInContact = _applicationDbContext.UserContacts.Include(m => m.ContactUser).Any(m => m.ContactUser.UserName == user.UserName);
+            bool isInContact = _userRepository.IsInContact(User.Identity.Name, username);
             AccountModel accountModel = CreateAccountModelForUser(User, isInContact, user);
             return View(accountModel);
         }
@@ -109,7 +103,7 @@ namespace LoanApplication.Controllers
                     {
                         if (error.Code == "DuplicateUserName")
                         {
-                            User ghostUser = _applicationDbContext.Users.Where(m => m.UserName == user.UserName && m.IsGhost == true).FirstOrDefault();
+                            User ghostUser = _userRepository.GetGhostUser(user.UserName);
                             if (ghostUser != null)
                             {
                                 if (model.DisplayGhostQuestion == false)
@@ -123,7 +117,7 @@ namespace LoanApplication.Controllers
                                     {
                                         ghostUser.PhoneNumber = model.PhoneNumber;
                                         ghostUser.IsGhost = false;
-                                        _applicationDbContext.Update(ghostUser);
+                                        _userRepository.UpdateUser(ghostUser);
                                         await _userManager.AddPasswordAsync(ghostUser, model.Password);
                                         await _userManager.SetEmailAsync(ghostUser, model.Email);
                                         await _signInManager.SignInAsync(ghostUser, false);
@@ -150,15 +144,7 @@ namespace LoanApplication.Controllers
         public IActionResult Contacts()
         {
             ContactListModel contactListModel = new ContactListModel();
-            List<User> users = _applicationDbContext.UserContacts
-                            .Include(m => m.ContactUser)
-                            .Include(m => m.ContactUser.LoanActionAsGiver)
-                            .Include(m => m.ContactUser.LoanActionAsTaker)
-                            .Include(m => m.User)
-                            .Where(m => m.User.UserName == User.Identity.Name)
-                            .Select(m => m.ContactUser)
-                            .ToList();
-
+            List<User> users = _userRepository.GetUserContacts(User.Identity.Name);
             contactListModel.contacts = users.Select(m => CreateAccountModelForUser(User, false, m)).ToList();
             return View(contactListModel);
         }
@@ -167,25 +153,14 @@ namespace LoanApplication.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddContact(string username)
         {
-            User currentUser = await _userManager.FindByNameAsync(User.Identity.Name);
-            UserContact userContact = new UserContact();
-            userContact.UserId = currentUser.Id;
-            userContact.ContactUserId = username;
-            _applicationDbContext.Add(userContact);
-            _applicationDbContext.SaveChanges();
+            _userRepository.AddUserContact(User.Identity.Name, username);
             return Redirect(Request.Headers.Referer);
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> RemoveContact(string username)
         {
-            UserContact userContact = _applicationDbContext.UserContacts
-                            .Include(m => m.ContactUser)
-                            .Include(m => m.User)
-                            .Where(m => m.User.UserName == User.Identity.Name && m.ContactUserId == username)
-                            .First();
-            _applicationDbContext.Remove(userContact);
-            _applicationDbContext.SaveChanges();
+            _userRepository.RemoveUserContact(User.Identity.Name, username);
             return Redirect(Request.Headers.Referer);
         }
         [HttpPost]

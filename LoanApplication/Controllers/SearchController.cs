@@ -11,12 +11,10 @@ namespace LoanApplication.Controllers
     public class SearchController : Controller
     {
         private readonly ApplicationDbContext _applicationDbContext;
-        private readonly UserManager<User> _userManager;
 
-        public SearchController(UserManager<User> userManager, ApplicationDbContext applicationDbContext)
+        public SearchController(ApplicationDbContext applicationDbContext)
         {
             _applicationDbContext = applicationDbContext;
-            _userManager = userManager;
         }
         public IActionResult Index()
         {
@@ -39,12 +37,12 @@ namespace LoanApplication.Controllers
         }
         public IActionResult ByPhone([FromQuery(Name = "number")] string number)
         {
-            return View("Result", search(number, "number", m => m.PhoneNumber.Contains(number)));
+            return View("Result", search(number, LoanApplication.Resources.Resources.SearchResultForPhone, m => m.PhoneNumber.Contains(number)));
         }
 
         public IActionResult ByUsername([FromQuery(Name = "username")] string username)
         {
-            return View("Result", search(username, "username", m => m.UserName.Contains(username)));
+            return View("Result", search(username, LoanApplication.Resources.Resources.SearchByUsername, m => m.UserName.Contains(username)));
         }
     }
 }

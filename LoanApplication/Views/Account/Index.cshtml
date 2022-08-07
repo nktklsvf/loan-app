@@ -1,9 +1,13 @@
 ﻿@model AccountModel
+@{
+    ViewData["Title"] = Model.UserName;
+}
+
 <div class="col-lg-8">
-    <p class="h1 fw-bold mb-5 md-4 mt-4">@Model.UserName's profile</p>
+    <p class="h1 fw-bold mb-5 md-4 mt-4">@LoanApplication.Resources.Resources.ProfileOf @Model.UserName</p>
             <div class="row">
               <div class="col-sm-3">
-                <p class="mb-0">Username</p>
+                <p class="mb-0">@LoanApplication.Resources.Resources.Username</p>
               </div>
               <div class="col-sm-9">
                 <p class="text-muted mb-0">@Model.UserName</p>
@@ -12,7 +16,7 @@
             <hr>
             <div class="row">
               <div class="col-sm-3">
-                <p class="mb-0">Phone</p>
+                <p class="mb-0">@LoanApplication.Resources.Resources.PhoneNumber</p>
               </div>
               <div class="col-sm-9">
                 <p class="text-muted mb-0">@Model.PhoneNumber</p>
@@ -21,7 +25,7 @@
             <hr>
             <div class="row">
               <div class="col-sm-3">
-                <p class="mb-0">Currently loaned</p>
+                <p class="mb-0">@LoanApplication.Resources.Resources.CurrentlyLoaned</p>
               </div>
               <div class="col-sm-9">
                 <p class="text-muted mb-0">@Model.TotalGiver</p>
@@ -30,7 +34,7 @@
             <hr>
             <div class="row">
               <div class="col-sm-3">
-                <p class="mb-0">Currently took</p>
+                <p class="mb-0">@LoanApplication.Resources.Resources.CurrentlyTook</p>
               </div>
               <div class="col-sm-9">
                 <p class="text-muted mb-0">@Model.TotalTaker</p>
@@ -43,25 +47,25 @@
             {
                 <form method="post" asp-controller="Account" asp-action="AddContact">
                     <input type="hidden" name="username" value="@Model.Id" />
-                    <input type="submit" class="btn btn-primary mt-4" value="Add to contacts" />
+                    <input type="submit" class="btn btn-primary mt-4" value="@LoanApplication.Resources.Resources.AddToContacts" />
                 </form>
             }
             else
             {
                  <form method="post" asp-controller="Account" asp-action="RemoveContact">
                     <input type="hidden" name="username" value="@Model.Id" />
-                    <input type="submit" class="btn btn-danger mt-4" value="Remove from contacts" />
+                    <input type="submit" class="btn btn-danger mt-4" value="@LoanApplication.Resources.Resources.RemoveFromContacts" />
                 </form>
             }
         }
 
-<h5 class="card-title mt-4">List of Loan actions as Giver:</h5>
+<h5 class="card-title mt-4">@LoanApplication.Resources.Resources.LoanActionsAsGiver:</h5>
     <table class="table">
         <thead>
             <tr>
-                <th scope="col">Taker</th>
-                <th scope="col">Amount</th>
-                <th scope="col">Description</th>
+                <th scope="col">@LoanApplication.Resources.Resources.Taker</th>
+                <th scope="col">@LoanApplication.Resources.Resources.Amount</th>
+                <th scope="col">@LoanApplication.Resources.Resources.Description</th>
             </tr>
         </thead>
         <tbody>
@@ -84,13 +88,13 @@
         </tbody>
     </table>
 
-<h5 class="card-title mt-4">List of Loan actions as Taker:</h5>
+<h5 class="card-title mt-4">@LoanApplication.Resources.Resources.LoanActionsAsTaker:</h5>
     <table class="table">
         <thead>
             <tr>
-                <th scope="col">Giver</th>
-                <th scope="col">Amount</th>
-                <th scope="col">Description</th>
+                <th scope="col">@LoanApplication.Resources.Resources.Giver</th>
+                <th scope="col">@LoanApplication.Resources.Resources.Amount</th>
+                <th scope="col">@LoanApplication.Resources.Resources.Description</th>
             </tr>
         </thead>
         <tbody>

@@ -1,36 +1,36 @@
 ﻿@{
-    ViewData["Title"] = "Add Loan Action Page";
+    ViewData["Title"] = @LoanApplication.Resources.Resources.AddLoanActionTitle;
 }
 
 @model AddLoanActionModel
 
-<p class="h1 fw-bold mb-5 mx-1 md-4 mt-4">Adding Loan Action</p>
+<p class="h1 fw-bold mb-5 mx-1 md-4 mt-4">@LoanApplication.Resources.Resources.AddAction</p>
 
 <form method="post">
     <div class="form-row">
         <div class="form-group col-md-8">
-            <label>Giver username</label>
+            <label>@LoanApplication.Resources.Resources.GiverUsername</label>
             <input type="text" class="form-control" asp-for="GiverUserName">
         </div>
     </div>
     <div class="form-row">
         <div class="form-group col-md-8">
-            <label>Taker username</label>
+            <label>@LoanApplication.Resources.Resources.TakerUsername</label>
             <input type="text" class="form-control" asp-for="TakerUserName">
         </div>
     </div>
     <div class="form-row">
         <div class="form-group col-md-8">
-            <label>Amount</label>
+            <label>@LoanApplication.Resources.Resources.Amount</label>
             <input type="text" class="form-control" asp-for="Amount">
         </div>
     </div>
     <div class="form-row">
         <div class="form-group col-md-8">
-            <label>Purpose</label>
+            <label>@LoanApplication.Resources.Resources.Purpose</label>
             <input type="text" class="form-control" asp-for="Purpose">
         </div>
     </div>
     <input type="hidden" class="form-control" value=@Model.LoanId asp-for="LoanId">
-    <button type="submit" class="btn btn-primary mt-3">Add Loan Action</button>
+    <button type="submit" class="btn btn-primary mt-3">@LoanApplication.Resources.Resources.AddAction</button>
 </form>

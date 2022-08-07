@@ -1,11 +1,14 @@
 ﻿@model RegisterViewModel
+@{
+    ViewData["Title"] = @LoanApplication.Resources.Resources.RegisterTitle;
+}
 
 
 <div class="card-body p-md-5">
     <div class="row justify-content-center">
         <div class="col-md-10 col-lg-6 col-xl-5 order-2 order-lg-1">
 
-            <p class="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">Registration</p>
+            <p class="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">@LoanApplication.Resources.Resources.Registration</p>
             
             <form method="post" asp-controller="Account" asp-action="Register">
 
@@ -14,7 +17,7 @@
                 <div class="d-flex flex-row align-items-center mb-4">
                     <i class="fas fa-user fa-lg me-3 fa-fw"></i>
                     <div class="form-outline flex-fill mb-0">
-                        <label class="form-label">Email</label>
+                        <label class="form-label">@LoanApplication.Resources.Resources.Email</label>
                         <input type="text" class="form-control" id="Email" asp-for="Email"/>
                         <span asp-validation-for="Email" class="text-danger"></span>
                     </div>
@@ -23,7 +26,7 @@
                 <div class="d-flex flex-row align-items-center mb-4">
                     <i class="fas fa-user fa-lg me-3 fa-fw"></i>
                     <div class="form-outline flex-fill mb-0">
-                        <label class="form-label">Username</label>
+                        <label class="form-label">@LoanApplication.Resources.Resources.Username</label>
                         <input type="text" class="form-control" asp-for="UserName" id="UserName"/>
                         <span asp-validation-for="UserName" class="text-danger"></span>
                     </div>
@@ -33,7 +36,7 @@
                 <div class="d-flex flex-row align-items-center mb-4">
                     <i class="fas fa-lock fa-lg me-3 fa-fw"></i>
                     <div class="form-outline flex-fill mb-0">
-                        <label class="form-label">Password</label>
+                        <label class="form-label">@LoanApplication.Resources.Resources.Password</label>
                         <input type="password" class="form-control" asp-for="Password" id="Password" value="@Model.Password"/>
                         <span asp-validation-for="Password" class="text-danger"></span>
                     </div>
@@ -42,7 +45,7 @@
                 <div class="d-flex flex-row align-items-center mb-4">
                     <i class="fas fa-key fa-lg me-3 fa-fw"></i>
                     <div class="form-outline flex-fill mb-0">
-                        <label class="form-label">Repeat your password</label>
+                        <label class="form-label">@LoanApplication.Resources.Resources.RepeatPassword</label>
                         <input type="password" class="form-control" asp-for="PasswordConfirm" id="PasswordConfirm" value="@Model.PasswordConfirm" />
                         <span asp-validation-for="PasswordConfirm" class="text-danger"></span>
                     </div>
@@ -51,7 +54,7 @@
                 <div class="d-flex flex-row align-items-center mb-4">
                     <i class="fas fa-envelope fa-lg me-3 fa-fw"></i>
                     <div class="form-outline flex-fill mb-0">
-                        <label class="form-label">Phone Number</label>
+                        <label class="form-label">@LoanApplication.Resources.Resources.PhoneNumber</label>
                         <input type="tel" class="form-control" asp-for="PhoneNumber" id="PhoneNumber"/>
                         <span asp-validation-for="PhoneNumber" class="text-danger"></span>
                     </div>
@@ -60,14 +63,14 @@
                 <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
                     @if (Model.DisplayGhostQuestion)
                     {
-                        <p>Account with given username already exists in the systme as ghost account. Do you confirm that this is your data?</p>
+                        <p>@LoanApplication.Resources.Resources.GhostConfirmation</p>
                         <input type="hidden" class="form-control" asp-for="ConfirmGhost" value="true"/>
                         <input type="hidden" class="form-control" asp-for="DisplayGhostQuestion" value="true"/>
-                        <button type="submit" class="btn btn-primary btn-lg">Confirm</button>
+                        <button type="submit" class="btn btn-primary btn-lg">@LoanApplication.Resources.Resources.Confirm</button>
                     }
                     else
                     {
-                        <button type="submit" class="btn btn-primary btn-lg">Register</button>
+                        <button type="submit" class="btn btn-primary btn-lg">@LoanApplication.Resources.Resources.Register</button>
                     }
                 </div>
             </form>

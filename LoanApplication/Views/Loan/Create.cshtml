@@ -1,23 +1,23 @@
 ﻿@{
-    ViewData["Title"] = "Add Loan Page";
+    ViewData["Title"] = @LoanApplication.Resources.Resources.CreateLoanTitle;
 }
 
 @model AddLoanModel
 
-<p class="h1 fw-bold mb-5 mx-1 md-4 mt-4">Adding Loan</p>
+<p class="h1 fw-bold mb-5 mx-1 md-4 mt-4">@LoanApplication.Resources.Resources.AddLoan</p>
 
 <form method="post">
     <div class="form-row">
         <div class="form-group col-md-8">
-            <label for="inputEmail4">Loan name</label>
+            <label for="inputEmail4">@LoanApplication.Resources.Resources.Name</label>
             <input type="text" class="form-control" id="inputEmail4" asp-for="Name">
         </div>
     </div>
     <div class="form-row">
         <div class="form-group col-md-8">
-            <label for="inputPassword4">Loan Description</label>
+            <label for="inputPassword4">@LoanApplication.Resources.Resources.Description</label>
             <input type="text" class="form-control" id="inputPassword4" asp-for="Description">
         </div>
     </div>
-    <button type="submit" class="btn btn-primary mt-3">Add loan</button>
+    <button type="submit" class="btn btn-primary mt-3">@LoanApplication.Resources.Resources.AddLoan</button>
 </form>

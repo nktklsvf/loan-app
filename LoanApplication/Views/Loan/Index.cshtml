@@ -1,19 +1,20 @@
-﻿@{
-    ViewData["Title"] = "Add Loan Page";
+﻿
+@model List<Loan>
+@{
+    ViewData["Title"] = @LoanApplication.Resources.Resources.LoansTitle;
 }
 
-@model List<Loan>
 
 
-<p class="h1 fw-bold mb-5 mx-1 md-4 mt-4">Loans list</p>
+<p class="h1 fw-bold mb-5 mx-1 md-4 mt-4">@LoanApplication.Resources.Resources.LoansList</p>
 
 <table class="table">
     <thead>
         <tr>
             <th scope="col">#</th>
-            <th scope="col">Name</th>
-            <th scope="col">Description</th>
-            <th scope="col">Creating Date</th>
+            <th scope="col">@LoanApplication.Resources.Resources.Name</th>
+            <th scope="col">@LoanApplication.Resources.Resources.Description</th>
+            <th scope="col">@LoanApplication.Resources.Resources.CreatingDate</th>
             <th scope="col"></th>
             <th scope="col"></th>
         </tr>
@@ -26,12 +27,12 @@
                 <td>@Html.DisplayFor(modelItem => item.Name)</td>
                 <td>@Html.DisplayFor(modelItem => item.Description)</td>
                 <td>@item.CreatingTime
-                    (@Math.Floor((DateTime.Now - item.CreatingTime).TotalDays) days ago)
-                <td>@Html.ActionLink("Edit", "Show", "Loan", new { item.Id }, null)</td>
-                <td>@Html.ActionLink("Remove", "Remove", "Loan", new { item.Id }, null)</td>
+                    (@Math.Floor((DateTime.Now - item.CreatingTime).TotalDays) @LoanApplication.Resources.Resources.DaysAgo)
+                <td>@Html.ActionLink(LoanApplication.Resources.Resources.Edit, "Show", "Loan", new { item.Id }, null)</td>
+                <td>@Html.ActionLink(LoanApplication.Resources.Resources.Remove, "Remove", "Loan", new { item.Id }, null)</td>
             </tr>
         }
 
     </tbody>
 </table>
-<input type="button" class="btn btn-primary" value="Add Loan" onclick="location.href='@Url.Action("Create", "Loan")'" />
+<input type="button" class="btn btn-primary" value="@LoanApplication.Resources.Resources.AddLoan" onclick="location.href='@Url.Action("Create", "Loan")'" />

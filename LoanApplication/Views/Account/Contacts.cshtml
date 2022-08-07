@@ -1,5 +1,9 @@
-﻿@model ContactListModel
-<p class="h1 fw-bold mb-5 mx-1 md-4 mt-4">Your contacts list</p>
+﻿@{
+    ViewData["Title"] = @LoanApplication.Resources.Resources.LoansTitle;
+}
+
+@model ContactListModel
+<p class="h1 fw-bold mb-5 mx-1 md-4 mt-4">@LoanApplication.Resources.Resources.ContactsList</p>
 
 
         @if (Model.contacts.Count > 0)
@@ -7,10 +11,10 @@
             <table class="table">
                 <thead>
                     <tr>
-                        <th scope="col">Username</th>
-                        <th scope="col">Phone Number</th>
-                        <th scope="col">Currently loaned</th>
-                        <th scope="col">Currently took</th>
+                        <th scope="col">@LoanApplication.Resources.Resources.Username</th>
+                        <th scope="col">@LoanApplication.Resources.Resources.PhoneNumber</th>
+                        <th scope="col">@LoanApplication.Resources.Resources.CurrentlyLoaned</th>
+                        <th scope="col">@LoanApplication.Resources.Resources.CurrentlyTook</th>
                     </tr>
                 </thead>
             <tbody>
@@ -28,5 +32,5 @@
         }
         else
         {
-            <p>You don't have any contacts yet</p>
+            <p>@LoanApplication.Resources.Resources.NoContacts</p>
         }

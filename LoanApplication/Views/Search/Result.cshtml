@@ -1,6 +1,9 @@
 ﻿@model SearchResultViewModel
+@{
+    ViewData["Title"] = @LoanApplication.Resources.Resources.SearchResultTitle + Model.SearchInput;
+}
 
-<p class="h1 fw-bold mb-5 mx-1 md-4 mt-4">Search result for @Model.SearchingFor: @Model.SearchInput</p>
+<p class="h1 fw-bold mb-5 mx-1 md-4 mt-4">@Model.SearchingFor: @Model.SearchInput</p>
 
 
         @if (Model.Found.Count > 0)
@@ -8,10 +11,10 @@
             <table class="table">
                 <thead>
                     <tr>
-                        <th scope="col">Username</th>
-                        <th scope="col">Phone Number</th>
-                        <th scope="col">Currently loaned</th>
-                        <th scope="col">Currently took</th>
+                        <th scope="col">@LoanApplication.Resources.Resources.Username</th>
+                        <th scope="col">@LoanApplication.Resources.Resources.PhoneNumber</th>
+                        <th scope="col">@LoanApplication.Resources.Resources.CurrentlyLoaned</th>
+                        <th scope="col">@LoanApplication.Resources.Resources.CurrentlyTook</th>
                     </tr>
                 </thead>
             <tbody>
@@ -29,5 +32,5 @@
         }
         else
         {
-            <p>Nothing has been found</p>
+            <p>@LoanApplication.Resources.Resources.NothingFound</p>
         }

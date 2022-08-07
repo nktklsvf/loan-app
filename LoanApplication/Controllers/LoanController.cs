@@ -1,46 +1,43 @@
 ﻿using LoanApplication.Data;
 using LoanApplication.Models;
+using LoanApplication.Repositories;
 using LoanApplication.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Globalization;
 
 namespace LoanApplication.Controllers
 {
     public class LoanController : Controller
     {
-        private readonly ApplicationDbContext _db;
-        private readonly UserManager<User> _userManager;
+        private readonly ILoanRepository _loanRepository;
+        private readonly ILoanActionRepository _loanActionRepository;
+        private readonly IUserRepository _userRepository;
 
-        public LoanController(UserManager<User> userManager, ApplicationDbContext db)
+        public LoanController(ILoanRepository loanRepository, ILoanActionRepository loanActionRepository, IUserRepository userRepository)
         {
-            _db = db;
-            _userManager = userManager;
+            _loanActionRepository = loanActionRepository;
+            _loanRepository = loanRepository;
+            _userRepository = userRepository;
+
         }
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            return View(_db.Set<Loan>().ToList());
+            return View(_loanRepository.GetAll());
         }
         public ActionResult Show(int id)
         {
-            Loan loan = _db.Loans.Find(id);
-            List<LoanAction> actions = _db.LoanActions
-                .Include(x => x.GiverUser)
-                .Include(x => x.TakerUser)
-                .Where(obj => obj.Loan.Id == id).ToList();
+            Loan loan = _loanRepository.Get(id);
+
+            List<LoanAction> actions = _loanActionRepository.Get(id);
             LoanView loanView = new LoanView(loan, actions);
             return View(loanView);
         }
         public ActionResult Remove(int id)
         {
-            Console.WriteLine(id);
-            Loan loan = _db.Loans.Find(id);
-            if (loan != null)
-            {
-                _db.Loans.Remove(loan);
-                _db.SaveChanges();
-            }
+            _loanRepository.Delete(id);
             return Redirect("/Loan");
         }
         [Authorize]
@@ -58,10 +55,10 @@ namespace LoanApplication.Controllers
             if (ModelState.IsValid)
             {
                 LoanAction loanAction = new LoanAction();
-                User giverUser = _db.Users.FirstOrDefault(user => user.UserName == obj.GiverUserName);
-                User takerUser = _db.Users.FirstOrDefault(user => user.UserName == obj.TakerUserName);
+                User giverUser = _userRepository.FirstOrDefault(user => user.UserName == obj.GiverUserName);
+                User takerUser = _userRepository.FirstOrDefault(user => user.UserName == obj.TakerUserName);
                 Console.WriteLine(obj.LoanId);
-                Loan loan = _db.Loans.Single(l => l.Id == obj.LoanId);
+                Loan loan = _loanRepository.Get(obj.LoanId);
                 if (loan != null)
                 {
                     if (giverUser == null)
@@ -70,7 +67,7 @@ namespace LoanApplication.Controllers
                         user.UserName = obj.GiverUserName;
                         user.IsGhost = true;
                         user.PhoneNumber = "-";
-                        var result = await _userManager.CreateAsync(user);
+                        IdentityResult result = await _userRepository.Create(user);
                         if (result.Succeeded)
                         {
                             giverUser = user;
@@ -82,7 +79,7 @@ namespace LoanApplication.Controllers
                         user.UserName = obj.TakerUserName;
                         user.IsGhost = true;
                         user.PhoneNumber = "-";
-                        var result = await _userManager.CreateAsync(user);
+                        IdentityResult result = await _userRepository.Create(user);
                         if (result.Succeeded)
                         {
                             takerUser = user;
@@ -96,8 +93,7 @@ namespace LoanApplication.Controllers
                         loanAction.Amount = obj.Amount;
                         loanAction.Loan = loan;
                         loanAction.CreatingTime = DateTime.Now;
-                        _db.LoanActions.Add(loanAction);
-                        _db.SaveChanges();
+                        _loanActionRepository.Create(loanAction);
                         return Redirect("/Loan/Show/" + obj.LoanId);
                     }
                 }
@@ -119,8 +115,7 @@ namespace LoanApplication.Controllers
                 loan.Name = obj.Name;
                 loan.Description = obj.Description;
                 loan.CreatingTime = DateTime.Now;
-                _db.Loans.Add(loan);
-                _db.SaveChanges();
+                _loanRepository.Create(loan);
                 return RedirectToAction("Index", "Loan");
             }
             return View();

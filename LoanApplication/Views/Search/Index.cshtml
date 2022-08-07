@@ -1,5 +1,10 @@
-﻿<p class="h1 fw-bold mb-5 mx-1 md-4 mt-4">Search</p>
-<p>Search by phone number</p>
+﻿@{
+    ViewData["Title"] = @LoanApplication.Resources.Resources.SearchTitle;
+}
+
+
+<p class="h1 fw-bold mb-5 mx-1 md-4 mt-4">@LoanApplication.Resources.Resources.Search</p>
+<p>@LoanApplication.Resources.Resources.SearchByPhone</p>
 <form method="get" asp-controller="Search" asp-action="ByPhone">
     <div class="input-group">
       <div class="form-outline">
@@ -11,7 +16,7 @@
     </div>
 </form>
 
-<p>Search by username</p>
+<p>@LoanApplication.Resources.Resources.SearchByUsername</p>
 <form method="get" asp-controller="Search" asp-action="ByUsername">
     <div class="input-group">
       <div class="form-outline">

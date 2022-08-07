@@ -3,18 +3,21 @@
 }
 
 @model LoanView
+@{
+    ViewData["Title"] = Model.Loan.Name;
+}
 
 <h3 class="card-title">@Model.Loan.Name</h3>
 <p class="card-text">@Model.Loan.Description</p>
-<h5 class="card-title">List of Loan actions:</h5>
+<h5 class="card-title">@LoanApplication.Resources.Resources.LoanActionsList</h5>
     <table class="table">
         <thead>
             <tr>
-                <th scope="col">Giver</th>
-                <th scope="col">Taker</th>
-                <th scope="col">Amount</th>
-                <th scope="col">Description</th>
-                <th scope="col">Creating Date</th>
+                <th scope="col">@LoanApplication.Resources.Resources.Giver</th>
+                <th scope="col">@LoanApplication.Resources.Resources.Taker</th>
+                <th scope="col">@LoanApplication.Resources.Resources.Amount</th>
+                <th scope="col">@LoanApplication.Resources.Resources.Description</th>
+                <th scope="col">@LoanApplication.Resources.Resources.CreatingDate</th>
             </tr>
         </thead>
         <tbody>
@@ -33,10 +36,10 @@
                 }
                 <td>@Html.DisplayFor(modelItem => item.Purpose)</td>
                 <td>@item.CreatingTime
-                    (@Math.Floor((DateTime.Now - item.CreatingTime).TotalDays) days ago)
+                    (@Math.Floor((DateTime.Now - item.CreatingTime).TotalDays) @LoanApplication.Resources.Resources.DaysAgo)
             </tr>
             }
 
         </tbody>
     </table>
-<input type="button" class="btn btn-primary mt-3" value="Add Action" onclick="location.href='@Url.Action("AddAction", "Loan",  new { Model.Loan.Id })'" />
+<input type="button" class="btn btn-primary mt-3" value="@LoanApplication.Resources.Resources.AddAction" onclick="location.href='@Url.Action("AddAction", "Loan",  new { Model.Loan.Id })'" />
